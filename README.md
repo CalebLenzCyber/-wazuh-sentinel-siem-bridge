@@ -38,9 +38,9 @@ The entire ecosystem was deployed inside a strict cloud environment utilizing sp
   sudo azcmagent connect \
     --service-principal-id "<Application-ID>" \
     --service-principal-secret "<Secret>" \
-    --resource-group "RG-Security-Labs" \
+    --resource-group "RG-Example" \
     --tenant-id "<Tenant-ID>" \
-    --location "eastus" \
+    --location "REGION" \
     --subscription-id "<Subscription-ID>"
   ```
 * **Outcome:** Securely projected the local virtual machine into the Azure Arc control plane. The machine shed the Service Principal credentials immediately post-onboarding and transitions to a unique, self-authenticating **Azure Managed Identity**.
@@ -66,7 +66,7 @@ The entire ecosystem was deployed inside a strict cloud environment utilizing sp
 * **The REST API Ingestion Payload:**
   ```bash
   az rest --method put \
-    --uri "/subscriptions/70530b32-1817-4c76-bc66-43cda9e1e92f/resourceGroups/RG-Security-Labs/providers/Microsoft.OperationalInsights/workspaces/Wazuh-Cloud-Repo/providers/Microsoft.SecurityInsights/alertRules/WazuhCriticalThreatAlert?api-version=2023-02-01" \
+    --uri "/subscriptions/<SUBSCRIPTION-ID>/resourceGroups/RG-EXAMPLE/providers/Microsoft.OperationalInsights/workspaces/<WORKBOOK>/providers/Microsoft.SecurityInsights/alertRules/WazuhCriticalThreatAlert?api-version=<VERSION>" \
     --body '{"kind":"Scheduled","properties":{"displayName":"Wazuh Critical Severity Alert","description":"Triggers an incident whenever a Level 7+ alert hits the server.","severity":"High","enabled":true,"query":"WazuhAlerts_CL | extend parsed = parse_json(RawData) | extend RuleLevel = toint(parsed.rule.level) | where RuleLevel >= 7","queryFrequency":"PT5M","queryPeriod":"PT5M","triggerOperator":"GreaterThan","triggerThreshold":0,"suppressionDuration":"PT1H","suppressionEnabled":false,"incidentConfiguration":{"createIncident":true,"groupingConfiguration":{"enabled":false,"reopenClosedIncident":false,"lookbackDuration":"PT5M","matchingMethod":"AllEntities"}}}}'
   ```
 
